@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Graf akcie</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h2>Vývoj ceny akcie {{ ticker }}</h2>
+
+    <canvas id="stockChart" width="400" height="200"></canvas>
+
+    <script>
+        // Data z Flasku
+        const times = {{ times | tojson }};
+        const closePrices = {{ close_prices | tojson }};
+        const volumes = {{ volumes | tojson }};
+
+        // Vytvoření kombinovaného grafu
+        new Chart(document.getElementById('stockChart'), {
+            type: 'line',
+            data: {
+                labels: times,
+                datasets: [
+                    {
+                        label: 'Cena uzavření ($)',
+                        data: closePrices,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        yAxisID: 'y',
+                        fill: false
+                    },
+                    {
+                        label: 'Objem obchodů',
+                        data: volumes,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        yAxisID: 'y1',
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Datum' }
+                    },
+                    y: {
+                        type: 'linear',
+                        position: 'left',
+                        title: { display: true, text: 'Cena ($)' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        position: 'right',
+                        title: { display: true, text: 'Objem' },
+                        grid: { drawOnChartArea: false } // Separátní osa
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
